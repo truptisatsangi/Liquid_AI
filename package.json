@@ -11,15 +11,21 @@
     "build": "cd frontend && npm run build",
     "start": "cd frontend && npm start"
   },
-  "keywords": ["defi", "liquidity", "ai", "ethereum", "dex"],
+  "keywords": [
+    "defi",
+    "liquidity",
+    "ai",
+    "ethereum",
+    "dex"
+  ],
   "author": "LiquidAI Team",
   "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.4.0",
     "hardhat": "^2.19.0"
   },
   "dependencies": {
-    "@pythnetwork/client": "^0.1.0",
     "dotenv": "^16.3.1",
     "ethers": "^6.8.0"
   }
