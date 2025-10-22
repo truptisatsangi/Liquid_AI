@@ -1,0 +1,117 @@
+# LiquidAI Envio HyperIndex Schema
+# Tracks DEX pool metrics, liquidity allocations, and rebalance events
+
+type PoolMetric @entity {
+  id: ID!                    # Unique identifier (poolAddress-timestamp)
+  poolAddress: String!       # DEX pool contract address
+  poolName: String           # Human-readable pool name
+  token0: String!            # First token address
+  token1: String!            # Second token address
+  token0Symbol: String       # Token0 symbol (e.g., "ETH")
+  token1Symbol: String       # Token1 symbol (e.g., "USDC")
+  tvlUSD: Float!             # Total Value Locked in USD
+  volume24h: Float!          # 24-hour trading volume in USD
+  volume7d: Float!           # 7-day trading volume in USD
+  feeAPR: Float!             # Fee APR percentage (0.05 = 5%)
+  liquidity: BigInt!         # Raw liquidity amount
+  price: Float!              # Current pool price
+  priceChange24h: Float!     # 24-hour price change percentage
+  volatility: Float!         # Calculated volatility metric
+  timestamp: Int!            # Block timestamp
+  blockNumber: BigInt!       # Block number
+}
+
+type LiquidityAllocation @entity {
+  id: ID!                    # Unique identifier
+  poolAddress: String!       # Pool address
+  allocationPercentage: Float! # Allocation percentage (0.0-100.0)
+  allocationBasisPoints: BigInt! # Allocation in basis points (0-10000)
+  tvlAllocated: Float!       # TVL allocated to this pool in USD
+  timestamp: Int!            # When allocation was set
+  blockNumber: BigInt!       # Block number
+}
+
+type RebalanceEvent @entity {
+  id: ID!                    # Unique identifier (proposalId)
+  proposalId: BigInt!        # Proposal ID from contract
+  pools: [String!]!          # Array of pool addresses
+  ratios: [BigInt!]!         # Array of allocation ratios
+  reason: String!            # Human-readable reason for rebalance
+  timestamp: Int!            # When rebalance was proposed
+  executedAt: Int            # When rebalance was executed (null if pending)
+  executed: Boolean!         # Whether rebalance was executed
+  executor: String           # Address that executed the rebalance
+  transactionHash: String    # Transaction hash of execution
+  blockNumber: BigInt!       # Block number
+  gasUsed: BigInt            # Gas used for execution
+}
+
+type MarketCondition @entity {
+  id: ID!                    # Unique identifier (timestamp)
+  timestamp: Int!            # Block timestamp
+  totalTVL: Float!           # Total TVL across all pools
+  averageAPR: Float!         # Average APR across pools
+  marketVolatility: Float!   # Overall market volatility
+  activePools: Int!          # Number of active pools
+  totalVolume24h: Float!     # Total 24h volume across pools
+  priceFeeds: [PriceFeed!]!  # Related price feeds
+}
+
+type PriceFeed @entity {
+  id: ID!                    # Unique identifier (feedId)
+  feedId: String!            # Pyth price feed ID
+  symbol: String!            # Trading pair symbol (e.g., "ETH/USD")
+  price: Float!              # Current price
+  confidence: Float!         # Price confidence interval
+  exponent: Int!             # Price exponent
+  timestamp: Int!            # Last update timestamp
+  blockNumber: BigInt!       # Block number
+}
+
+type AgentAction @entity {
+  id: ID!                    # Unique identifier
+  agentType: String!         # "observer", "allocator", or "executor"
+  action: String!            # Action performed
+  parameters: String         # JSON string of action parameters
+  result: String             # JSON string of action result
+  confidence: Float          # Confidence score (0.0-1.0)
+  timestamp: Int!            # When action was performed
+  blockNumber: BigInt!       # Block number
+  success: Boolean!          # Whether action was successful
+}
+
+type SystemMetrics @entity {
+  id: ID!                    # Unique identifier (daily)
+  date: String!              # Date in YYYY-MM-DD format
+  totalRebalances: Int!      # Total rebalances performed
+  successfulRebalances: Int! # Successful rebalances
+  totalGasUsed: BigInt!      # Total gas used
+  averageConfidence: Float!  # Average confidence score
+  totalFeesEarned: Float!    # Total fees earned in USD
+  activePools: Int!          # Number of active pools
+  timestamp: Int!            # Block timestamp
+}
+
+# Helper entities for complex queries
+
+type PoolPerformance @entity {
+  id: ID!                    # poolAddress-date
+  poolAddress: String!       # Pool address
+  date: String!              # Date in YYYY-MM-DD format
+  dailyVolume: Float!        # Daily volume
+  dailyFees: Float!          # Daily fees earned
+  apr: Float!                # Daily APR
+  tvlChange: Float!          # TVL change from previous day
+  timestamp: Int!            # Block timestamp
+}
+
+type RiskMetrics @entity {
+  id: ID!                    # Unique identifier
+  poolAddress: String!       # Pool address
+  volatility: Float!         # Calculated volatility
+  concentration: Float!      # Concentration risk
+  correlation: Float!        # Correlation with other pools
+  riskScore: Float!          # Overall risk score (0-100)
+  timestamp: Int!            # When metrics were calculated
+  blockNumber: BigInt!       # Block number
+}

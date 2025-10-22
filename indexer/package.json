@@ -1,0 +1,20 @@
+{
+  "name": "liquidai-indexer",
+  "version": "1.0.0",
+  "description": "Envio HyperIndex for LiquidAI DEX pool data",
+  "main": "index.js",
+  "scripts": {
+    "build": "envio build",
+    "start": "envio start",
+    "dev": "envio dev",
+    "codegen": "envio codegen"
+  },
+  "dependencies": {
+    "@envio-dev/hyperindex": "^0.1.0",
+    "graphql": "^16.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
