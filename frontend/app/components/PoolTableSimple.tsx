@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-// import { motion } from 'framer-motion'
 import { TrendingUp, TrendingDown, MoreHorizontal, ExternalLink, Activity } from 'lucide-react'
 import ProgressRing from './ProgressRing'
 
@@ -74,7 +73,7 @@ export default function PoolTable({ pools }: PoolTableProps) {
         </div>
         <button className="btn btn-secondary text-sm">
           <MoreHorizontal className="w-4 h-4" />
-        </motion.button>
+        </button>
       </div>
 
       <div className="overflow-x-auto">
@@ -86,54 +85,36 @@ export default function PoolTable({ pools }: PoolTableProps) {
                 onClick={() => handleSort('poolName')}
               >
                 Pool
-                {sortBy === 'poolName' && (
-                  <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
-                )}
               </th>
               <th 
                 className="text-right py-3 px-4 font-medium text-secondary-600 cursor-pointer hover:text-secondary-900"
                 onClick={() => handleSort('tvlUSD')}
               >
                 TVL
-                {sortBy === 'tvlUSD' && (
-                  <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
-                )}
               </th>
               <th 
                 className="text-right py-3 px-4 font-medium text-secondary-600 cursor-pointer hover:text-secondary-900"
                 onClick={() => handleSort('volume24h')}
               >
                 24h Volume
-                {sortBy === 'volume24h' && (
-                  <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
-                )}
               </th>
               <th 
                 className="text-right py-3 px-4 font-medium text-secondary-600 cursor-pointer hover:text-secondary-900"
                 onClick={() => handleSort('feeAPR')}
               >
                 APR
-                {sortBy === 'feeAPR' && (
-                  <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
-                )}
               </th>
               <th 
                 className="text-right py-3 px-4 font-medium text-secondary-600 cursor-pointer hover:text-secondary-900"
                 onClick={() => handleSort('allocation')}
               >
                 Allocation
-                {sortBy === 'allocation' && (
-                  <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
-                )}
               </th>
               <th 
                 className="text-right py-3 px-4 font-medium text-secondary-600 cursor-pointer hover:text-secondary-900"
                 onClick={() => handleSort('priceChange24h')}
               >
                 24h Change
-                {sortBy === 'priceChange24h' && (
-                  <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
-                )}
               </th>
               <th className="text-center py-3 px-4 font-medium text-secondary-600">
                 Actions

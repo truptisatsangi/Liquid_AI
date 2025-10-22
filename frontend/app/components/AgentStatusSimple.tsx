@@ -1,69 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { Brain, Activity, CheckCircle, AlertCircle, Clock, Zap, Wifi, Database, Hash } from 'lucide-react'
 
 interface AgentStatusProps {
   isRunning: boolean
 }
 
-interface LogEntry {
-  id: string
-  timestamp: Date
-  level: 'info' | 'warning' | 'error' | 'success'
-  message: string
-  agent: string
-}
-
 export default function AgentStatus({ isRunning }: AgentStatusProps) {
   const [selectedAgent, setSelectedAgent] = useState<'observer' | 'allocator' | 'executor'>('observer')
   const [showLogs, setShowLogs] = useState(false)
-
-  const mockLogs: LogEntry[] = [
-    {
-      id: '1',
-      timestamp: new Date(Date.now() - 30000),
-      level: 'info',
-      message: 'Fetching latest price data from Pyth Network',
-      agent: 'Observer'
-    },
-    {
-      id: '2',
-      timestamp: new Date(Date.now() - 60000),
-      level: 'success',
-      message: 'Successfully updated pool metrics via Envio',
-      agent: 'Observer'
-    },
-    {
-      id: '3',
-      timestamp: new Date(Date.now() - 90000),
-      level: 'info',
-      message: 'Analyzing market volatility patterns',
-      agent: 'Allocator'
-    },
-    {
-      id: '4',
-      timestamp: new Date(Date.now() - 120000),
-      level: 'warning',
-      message: 'High volatility detected in ETH/USDC pool',
-      agent: 'Allocator'
-    },
-    {
-      id: '5',
-      timestamp: new Date(Date.now() - 150000),
-      level: 'success',
-      message: 'Rebalance proposal generated with 87% confidence',
-      agent: 'Allocator'
-    },
-    {
-      id: '6',
-      timestamp: new Date(Date.now() - 180000),
-      level: 'info',
-      message: 'Executing rebalance transaction on-chain',
-      agent: 'Executor'
-    }
-  ]
 
   const agents = {
     observer: {
@@ -165,13 +111,13 @@ export default function AgentStatus({ isRunning }: AgentStatusProps) {
             <span className="text-xs font-medium text-warning-700">Last TX</span>
           </div>
           <div className="text-xs font-mono text-warning-800">0x2345...6789</div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Agent Tabs */}
       <div className="flex gap-2 mb-6">
         {Object.entries(agents).map(([key, agent]) => (
-          <motion.button
+          <button
             key={key}
             onClick={() => setSelectedAgent(key as any)}
             className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
@@ -179,11 +125,9 @@ export default function AgentStatus({ isRunning }: AgentStatusProps) {
                 ? 'bg-primary-100 text-primary-700 border border-primary-200'
                 : 'text-secondary-600 hover:text-secondary-900 hover:bg-secondary-50'
             }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
             {agent.name.split(' ')[0]}
-          </motion.button>
+          </button>
         ))}
       </div>
 
@@ -192,20 +136,22 @@ export default function AgentStatus({ isRunning }: AgentStatusProps) {
         {/* Agent Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-medium text-secondary-900">{currentAgent.name}</h3>
+            <h3 className="font-semibold text-secondary-900">{currentAgent.name}</h3>
             <p className="text-sm text-secondary-600">{currentAgent.description}</p>
           </div>
-          <div className={`flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-medium ${getStatusColor(currentAgent.status)}`}>
-            {getStatusIcon(currentAgent.status)}
-            {currentAgent.status}
+          <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(currentAgent.status)}`}>
+            <div className="flex items-center gap-2">
+              {getStatusIcon(currentAgent.status)}
+              <span className="capitalize">{currentAgent.status}</span>
+            </div>
           </div>
         </div>
 
         {/* Agent Metrics */}
         <div className="grid grid-cols-3 gap-4">
           {Object.entries(currentAgent.metrics).map(([key, value]) => (
-            <div key={key} className="text-center">
-              <div className="text-lg font-semibold text-secondary-900">{value}</div>
+            <div key={key} className="text-center p-3 bg-secondary-50 rounded-lg">
+              <div className="text-lg font-bold text-secondary-900">{value}</div>
               <div className="text-xs text-secondary-600 capitalize">
                 {key.replace(/([A-Z])/g, ' $1').trim()}
               </div>
@@ -215,110 +161,89 @@ export default function AgentStatus({ isRunning }: AgentStatusProps) {
 
         {/* Last Activity */}
         <div className="flex items-center gap-2 text-sm text-secondary-600">
-          <Activity className="w-4 h-4" />
-          Last activity: {currentAgent.lastActivity}
+          <Clock className="w-4 h-4" />
+          <span>Last activity: {currentAgent.lastActivity}</span>
         </div>
 
-        {/* Actions */}
-        <div className="pt-4 border-t border-secondary-200">
-          <div className="flex gap-2">
-            <button className="btn btn-primary flex-1 text-sm">
-              <Zap className="w-4 h-4" />
-              Trigger Action
-            </button>
-            <button className="btn btn-secondary text-sm">
-              View Logs
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* System Status */}
-      <div className="mt-6 pt-4 border-t border-secondary-200">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-secondary-600">System Status</span>
-          <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${
-              isRunning ? 'bg-success-500' : 'bg-warning-500'
-            }`}></div>
-            <span className="font-medium">
-              {isRunning ? 'All Systems Operational' : 'Standby Mode'}
-            </span>
-          </div>
+        {/* Overall Status */}
+        <div className="flex items-center gap-3 p-3 bg-secondary-50 rounded-lg">
+          <div className={`w-3 h-3 rounded-full ${
+            isRunning ? 'bg-success-500 animate-pulse' : 'bg-secondary-400'
+          }`}></div>
+          <span className="font-medium">
+            {isRunning ? 'All Systems Operational' : 'Standby Mode'}
+          </span>
         </div>
       </div>
 
       {/* View Logs Button */}
       <div className="mt-6 pt-4 border-t border-secondary-200">
-        <motion.button
+        <button
           onClick={() => setShowLogs(true)}
           className="w-full btn btn-secondary flex items-center justify-center gap-2"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
         >
           <Activity className="w-4 h-4" />
           View Agent Logs
-        </motion.button>
+        </button>
       </div>
 
       {/* Logs Modal */}
-      <AnimatePresence>
-        {showLogs && (
-          <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowLogs(false)}
+      {showLogs && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowLogs(false)}
+        >
+          <div
+            className="bg-white rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
           >
-            <motion.div
-              className="bg-white rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-secondary-900">Agent Activity Logs</h3>
-                <button
-                  onClick={() => setShowLogs(false)}
-                  className="text-secondary-400 hover:text-secondary-600"
-                >
-                  ×
-                </button>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-secondary-900">Agent Activity Logs</h3>
+              <button
+                onClick={() => setShowLogs(false)}
+                className="text-secondary-400 hover:text-secondary-600"
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              <div className="flex items-start gap-3 p-3 bg-secondary-50 rounded-lg">
+                <div className="w-2 h-2 rounded-full mt-2 bg-primary-500" />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm font-medium text-secondary-900">Observer</span>
+                    <span className="text-xs text-secondary-500">2:30 PM</span>
+                  </div>
+                  <p className="text-sm text-secondary-700">Fetching latest price data from Pyth Network</p>
+                </div>
               </div>
               
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {mockLogs.map((log, index) => (
-                  <motion.div
-                    key={log.id}
-                    className="flex items-start gap-3 p-3 bg-secondary-50 rounded-lg"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <div className={`w-2 h-2 rounded-full mt-2 ${
-                      log.level === 'success' ? 'bg-success-500' :
-                      log.level === 'warning' ? 'bg-warning-500' :
-                      log.level === 'error' ? 'bg-danger-500' :
-                      'bg-primary-500'
-                    }`} />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-medium text-secondary-900">{log.agent}</span>
-                        <span className="text-xs text-secondary-500">
-                          {log.timestamp.toLocaleTimeString()}
-                        </span>
-                      </div>
-                      <p className="text-sm text-secondary-700">{log.message}</p>
-                    </div>
-                  </motion.div>
-                ))}
+              <div className="flex items-start gap-3 p-3 bg-secondary-50 rounded-lg">
+                <div className="w-2 h-2 rounded-full mt-2 bg-success-500" />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm font-medium text-secondary-900">Observer</span>
+                    <span className="text-xs text-secondary-500">2:29 PM</span>
+                  </div>
+                  <p className="text-sm text-secondary-700">Successfully updated pool metrics via Envio</p>
+                </div>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              
+              <div className="flex items-start gap-3 p-3 bg-secondary-50 rounded-lg">
+                <div className="w-2 h-2 rounded-full mt-2 bg-primary-500" />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm font-medium text-secondary-900">Allocator</span>
+                    <span className="text-xs text-secondary-500">2:28 PM</span>
+                  </div>
+                  <p className="text-sm text-secondary-700">Analyzing market volatility patterns</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

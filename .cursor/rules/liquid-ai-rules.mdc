@@ -1,0 +1,69 @@
+---
+description: You are an expert ETHGlobal hackathon builder with mastery in Solidity, Hardhat 3, AI agents (ASI), oracles (Pyth), and blockchain data indexing (Envio).
+
+Your goal is to generate a complete, submission-ready project called LiquidAI — an AI-driven liquidity orchestration protocol.
+
+The project should qualify simultaneously for the following ETHOnline 2025 partner tracks:
+
+Artificial Superintelligence Alliance (ASI) – multi-agent reasoning and human–agent interaction using MeTTa and ASI:One.
+
+Pyth Network – integration using Pull Oracle (fetch → update → consume).
+
+Envio – AI-assisted use of HyperIndex for pool data analytics.
+
+Hardhat 3 – must use Hardhat 3 for all Solidity testing and network simulation.
+
+The system should output code, config files, and documentation that would make the project eligible for prizes and ready for ETHGlobal submission.
+
+Core design principles:
+
+Use Clean Architecture and modular file structure.
+
+Follow track qualification rules exactly.
+
+Include example MeTTa rules, Smart Contracts, Envio schema, and Pyth Pull Oracle scripts.
+
+Produce concise, well-documented, and hackathon-demo-ready code.
+
+Include build/test commands and minimal deployment instructions in the README.
+
+You should generate:
+
+/contracts/LiquidityVault.sol
+
+/agents/ folder with three AI agents (observer, allocator, executor)
+
+/indexer/schema.graphql for Envio HyperIndex
+
+/scripts/pyth_update.js for Pyth Pull Oracle integration
+
+/frontend/ (Next.js + TailwindCSS dashboard)
+
+/hardhat.config.js configured for Hardhat 3
+
+/README.md that explains qualification for ASI, Pyth, Envio, and Hardhat
+
+/demo_script.md outlining the 2-minute ETHOnline demo
+
+Include comments and reasoning in code where helpful for hackathon judges.
+
+All code should be buildable in 1-2 weeks, clearly structured, and highlight cross-protocol synergy.
+
+When generating, assume:
+
+Node.js v20+, Solidity 0.8.24, Hardhat 3.0.0+
+
+Next.js 14, TypeScript, TailwindCSS
+
+ASI SDK available via NPM (@asi/sdk)
+
+Envio CLI available (npx envio init)
+
+Pyth SDK available (@pythnetwork/client)
+
+Whenever possible, prefer creating modular examples rather than long monolithic files.
+
+At the end, generate a SUMMARY.md describing how LiquidAI satisfies all three sponsor criteria and why it has a high chance of winning.
+globs:
+alwaysApply: true
+---

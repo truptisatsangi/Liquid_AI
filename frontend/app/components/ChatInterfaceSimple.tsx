@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-// import { motion, AnimatePresence } from 'framer-motion'
 import { Send, Bot, User, Loader2, Sparkles, Brain, Zap } from 'lucide-react'
 
 interface Message {
@@ -51,14 +50,14 @@ export default function ChatInterface() {
     scrollToBottom()
   }, [messages])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim() || isLoading) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: input.trim(),
+      content: input,
       timestamp: new Date()
     }
 
@@ -159,114 +158,82 @@ export default function ChatInterface() {
 
       {/* Messages */}
       <div className="h-80 overflow-y-auto mb-4 space-y-4 pr-2">
-        <AnimatePresence>
-          {messages.map((message) => (
-            <motion.div
-              key={message.id}
-              className={`flex gap-3 ${
-                message.type === 'user' ? 'justify-end' : 'justify-start'
-              }`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {message.type === 'assistant' && (
-                <motion.div 
-                  className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <Bot className="w-4 h-4 text-primary-600" />
-                </motion.div>
-              )}
-              
-              <div className="max-w-xs lg:max-w-md">
-                <motion.div
-                  className={`px-4 py-2 rounded-lg ${
-                    message.type === 'user'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-secondary-100 text-secondary-900'
-                  }`}
-                  initial={{ scale: 0.95 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <p className="text-sm">{message.content}</p>
-                  <p
-                    className={`text-xs mt-1 ${
-                      message.type === 'user' ? 'text-primary-100' : 'text-secondary-500'
-                    }`}
-                  >
-                    {formatTime(message.timestamp)}
-                  </p>
-                </motion.div>
-                
-                {/* Reasoning snippet for assistant messages */}
-                {message.type === 'assistant' && message.reasoning && (
-                  <motion.div
-                    className="mt-2 bg-gray-900 p-3 rounded-lg text-xs text-gray-300 font-mono"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    transition={{ delay: 0.5, duration: 0.3 }}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <Brain className="w-3 h-3 text-blue-400" />
-                      <span className="text-blue-400 font-semibold">MeTTa Reasoning</span>
-                    </div>
-                    <div className="space-y-1">
-                      <div>
-                        <span className="text-gray-400">Rule:</span> 
-                        <span className="text-yellow-300 ml-1">{message.reasoning.rule}</span>
-                      </div>
-                      <div>
-                        <span className="text-gray-400">Confidence:</span> 
-                        <span className="text-green-300 ml-1">{message.reasoning.confidence}</span>
-                      </div>
-                      <div>
-                        <span className="text-gray-400">Action:</span> 
-                        <span className="text-purple-300 ml-1">{message.reasoning.action}</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`flex gap-3 ${
+              message.type === 'user' ? 'justify-end' : 'justify-start'
+            }`}
+          >
+            {message.type === 'assistant' && (
+              <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <Bot className="w-4 h-4 text-primary-600" />
               </div>
-
-              {message.type === 'user' && (
-                <motion.div 
-                  className="w-8 h-8 bg-secondary-100 rounded-full flex items-center justify-center flex-shrink-0"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.2 }}
+            )}
+            
+            <div className="max-w-xs lg:max-w-md">
+              <div
+                className={`px-4 py-2 rounded-lg ${
+                  message.type === 'user'
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-secondary-100 text-secondary-900'
+                }`}
+              >
+                <p className="text-sm">{message.content}</p>
+                <p
+                  className={`text-xs mt-1 ${
+                    message.type === 'user' ? 'text-primary-100' : 'text-secondary-500'
+                  }`}
                 >
-                  <User className="w-4 h-4 text-secondary-600" />
-                </motion.div>
+                  {formatTime(message.timestamp)}
+                </p>
+              </div>
+              
+              {/* Reasoning snippet for assistant messages */}
+              {message.type === 'assistant' && message.reasoning && (
+                <div className="mt-2 bg-gray-900 p-3 rounded-lg text-xs text-gray-300 font-mono">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Brain className="w-3 h-3 text-blue-400" />
+                    <span className="text-blue-400 font-semibold">MeTTa Reasoning</span>
+                  </div>
+                  <div className="space-y-1">
+                    <div>
+                      <span className="text-gray-400">Rule:</span> 
+                      <span className="text-yellow-300 ml-1">{message.reasoning.rule}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400">Confidence:</span> 
+                      <span className="text-green-300 ml-1">{message.reasoning.confidence}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400">Action:</span> 
+                      <span className="text-purple-300 ml-1">{message.reasoning.action}</span>
+                    </div>
+                  </div>
+                </div>
               )}
-            </motion.div>
-          ))}
-        </AnimatePresence>
+            </div>
+
+            {message.type === 'user' && (
+              <div className="w-8 h-8 bg-secondary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <User className="w-4 h-4 text-secondary-600" />
+              </div>
+            )}
+          </div>
+        ))}
 
         {isLoading && (
-          <motion.div 
-            className="flex gap-3 justify-start"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
+          <div className="flex gap-3 justify-start">
             <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
               <Bot className="w-4 h-4 text-primary-600" />
             </div>
             <div className="bg-secondary-100 rounded-lg px-4 py-2">
               <div className="flex items-center gap-2">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                >
-                  <Loader2 className="w-4 h-4 text-secondary-600" />
-                </motion.div>
+                <Loader2 className="w-4 h-4 animate-spin text-secondary-600" />
                 <span className="text-sm text-secondary-600">LiquidAI is thinking...</span>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
 
         <div ref={messagesEndRef} />
@@ -278,14 +245,14 @@ export default function ChatInterface() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about market conditions, rebalancing strategies, or portfolio performance..."
-          className="input flex-1"
+          placeholder="Ask about your portfolio, market conditions, or rebalancing strategies..."
+          className="flex-1 px-4 py-2 border border-secondary-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           disabled={isLoading}
         />
         <button
           type="submit"
           disabled={!input.trim() || isLoading}
-          className="btn btn-primary px-4"
+          className="btn btn-primary flex items-center gap-2"
         >
           <Send className="w-4 h-4" />
         </button>
@@ -299,18 +266,13 @@ export default function ChatInterface() {
         </div>
         <div className="flex flex-wrap gap-2">
           {suggestedQueries.map((suggestion, index) => (
-            <motion.button
+            <button
               key={suggestion}
               onClick={() => setInput(suggestion)}
               className="px-3 py-1 text-xs bg-secondary-100 text-secondary-700 rounded-full hover:bg-secondary-200 transition-colors"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
               {suggestion}
-            </motion.button>
+            </button>
           ))}
         </div>
       </div>

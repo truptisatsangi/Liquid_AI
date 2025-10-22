@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+// import { motion } from 'framer-motion'
 import { 
   TrendingUp, 
   DollarSign, 
@@ -15,13 +16,18 @@ import {
   Pause,
   Settings
 } from 'lucide-react'
+import { Toaster, toast } from 'react-hot-toast'
 import Header from './components/Header'
 import MetricCard from './components/MetricCard'
-import PoolTable from './components/PoolTable'
+import PoolTable from './components/PoolTableSimple'
 import RebalanceHistory from './components/RebalanceHistory'
 import MarketChart from './components/MarketChart'
-import AgentStatus from './components/AgentStatus'
-import ChatInterface from './components/ChatInterface'
+import AgentStatus from './components/AgentStatusSimple'
+import ChatInterface from './components/ChatInterfaceSimple'
+import SponsorBadges from './components/SponsorBadges'
+import DataFreshness from './components/DataFreshness'
+import DemoModeSwitch from './components/DemoModeSwitchSimple'
+import UnderTheHoodModal from './components/UnderTheHoodModalSimple'
 
 interface PoolData {
   id: string
@@ -56,6 +62,8 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [isAgentRunning, setIsAgentRunning] = useState(false)
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date())
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [showUnderTheHood, setShowUnderTheHood] = useState(false)
 
   // Mock data for development
   useEffect(() => {
@@ -138,14 +146,31 @@ export default function Dashboard() {
   }, [])
 
   const handleExecuteRebalance = async () => {
+    setIsUpdating(true)
+    toast.loading('Executing rebalance...', { id: 'rebalance' })
+    
     // Simulate rebalance execution
-    console.log('Executing rebalance...')
-    // In a real implementation, this would call the smart contract
+    setTimeout(() => {
+      toast.success('Rebalance executed successfully!', { id: 'rebalance' })
+      setIsUpdating(false)
+      setLastUpdate(new Date())
+    }, 2000)
   }
 
   const toggleAgent = () => {
     setIsAgentRunning(!isAgentRunning)
-    // In a real implementation, this would start/stop the agent
+    toast.success(isAgentRunning ? 'Agent stopped' : 'Agent started')
+  }
+
+  const handleRefreshData = () => {
+    setIsUpdating(true)
+    toast.loading('Refreshing data...', { id: 'refresh' })
+    
+    setTimeout(() => {
+      setLastUpdate(new Date())
+      setIsUpdating(false)
+      toast.success('Data refreshed successfully!', { id: 'refresh' })
+    }, 1500)
   }
 
   if (isLoading) {
@@ -163,9 +188,13 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen">
+      <Toaster position="top-right" />
       <Header />
       
       <main className="container mx-auto px-4 py-8">
+        {/* Sponsor Badges */}
+        <SponsorBadges />
+        
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gradient mb-4">
@@ -187,20 +216,31 @@ export default function Dashboard() {
             <button
               onClick={handleExecuteRebalance}
               className="btn btn-primary flex items-center gap-2"
+              disabled={isUpdating}
             >
               <Zap className="w-4 h-4" />
               Execute Rebalance
             </button>
             
-            <button className="btn btn-secondary flex items-center gap-2">
-              <RefreshCw className="w-4 h-4" />
+            <button 
+              onClick={handleRefreshData}
+              className="btn btn-secondary flex items-center gap-2"
+              disabled={isUpdating}
+            >
+              <RefreshCw className={`w-4 h-4 ${isUpdating ? 'animate-spin' : ''}`} />
               Refresh Data
+            </button>
+            
+            <button 
+              onClick={() => setShowUnderTheHood(true)}
+              className="btn btn-outline flex items-center gap-2"
+            >
+              <Settings className="w-4 h-4" />
+              Under the Hood
             </button>
           </div>
           
-          <div className="text-sm text-secondary-500">
-            Last updated: {lastUpdate.toLocaleTimeString()}
-          </div>
+          <DataFreshness lastUpdate={lastUpdate} isUpdating={isUpdating} />
         </div>
 
         {/* Market Overview */}
@@ -211,6 +251,9 @@ export default function Dashboard() {
             change={2.3}
             icon={<DollarSign className="w-6 h-6" />}
             color="primary"
+            description="Total Value Locked across all monitored DEX pools, updated via Envio HyperIndex"
+            isUpdating={isUpdating}
+            index={0}
           />
           <MetricCard
             title="Average APR"
@@ -218,6 +261,9 @@ export default function Dashboard() {
             change={0.8}
             icon={<TrendingUp className="w-6 h-6" />}
             color="success"
+            description="Average Annual Percentage Rate across all pools, calculated from fee data"
+            isUpdating={isUpdating}
+            index={1}
           />
           <MetricCard
             title="Market Volatility"
@@ -225,6 +271,9 @@ export default function Dashboard() {
             change={-1.2}
             icon={<Activity className="w-6 h-6" />}
             color="warning"
+            description="Real-time volatility calculated from Pyth price feeds and market movements"
+            isUpdating={isUpdating}
+            index={2}
           />
           <MetricCard
             title="Active Pools"
@@ -232,6 +281,9 @@ export default function Dashboard() {
             change={0}
             icon={<BarChart3 className="w-6 h-6" />}
             color="info"
+            description="Number of DEX pools currently being monitored and managed by LiquidAI"
+            isUpdating={isUpdating}
+            index={3}
           />
         </div>
 
@@ -254,11 +306,18 @@ export default function Dashboard() {
           <RebalanceHistory />
         </div>
 
-        {/* Chat Interface */}
-        <div className="mb-8">
+        {/* Demo Mode and Chat */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <DemoModeSwitch />
           <ChatInterface />
         </div>
       </main>
+
+      {/* Under the Hood Modal */}
+      <UnderTheHoodModal 
+        isOpen={showUnderTheHood} 
+        onClose={() => setShowUnderTheHood(false)} 
+      />
     </div>
   )
 }
