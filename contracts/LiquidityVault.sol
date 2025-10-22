@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
  * @title LiquidityVault
- * @dev AI-driven liquidity orchestration vault that manages DEX pool allocations
+ * @notice AI-driven liquidity orchestration vault that manages DEX pool allocations
  * @author LiquidAI Team
  */
 contract LiquidityVault is ReentrancyGuard, Ownable {
@@ -32,7 +32,6 @@ contract LiquidityVault is ReentrancyGuard, Ownable {
     // Array of all rebalance proposals
     RebalanceProposal[] public rebalanceProposals;
     
-    // Events
     event RebalanceProposed(
         uint256 indexed proposalId,
         address[] pools,
@@ -69,7 +68,7 @@ contract LiquidityVault is ReentrancyGuard, Ownable {
     }
     
     /**
-     * @dev Propose a rebalance of liquidity across pools
+     * @notice Propose a rebalance of liquidity across pools
      * @param pools Array of pool addresses
      * @param ratios Array of allocation ratios (in basis points)
      * @param reason Human-readable reason for the rebalance
@@ -98,7 +97,7 @@ contract LiquidityVault is ReentrancyGuard, Ownable {
     }
     
     /**
-     * @dev Execute a rebalance proposal
+     * @notice Execute a rebalance proposal
      * @param proposalId ID of the proposal to execute
      */
     function executeRebalance(uint256 proposalId) external onlyOwner nonReentrant {
@@ -118,7 +117,7 @@ contract LiquidityVault is ReentrancyGuard, Ownable {
     }
     
     /**
-     * @dev Update the agent authority address
+     * @notice Update the agent authority address
      * @param newAuthority New agent authority address
      */
     function updateAgentAuthority(address newAuthority) external onlyOwner {
@@ -129,7 +128,7 @@ contract LiquidityVault is ReentrancyGuard, Ownable {
     }
     
     /**
-     * @dev Get the current allocation for a specific pool
+     * @notice Get the current allocation for a specific pool
      * @param pool Pool address
      * @return allocation Allocation percentage in basis points
      */
@@ -138,7 +137,7 @@ contract LiquidityVault is ReentrancyGuard, Ownable {
     }
     
     /**
-     * @dev Get all pool allocations
+     * @notice Get all pool allocations
      * @return pools Array of pool addresses
      * @return allocations Array of allocation percentages
      */
@@ -150,7 +149,7 @@ contract LiquidityVault is ReentrancyGuard, Ownable {
     }
     
     /**
-     * @dev Get rebalance proposal details
+     * @notice Get rebalance proposal details
      * @param proposalId Proposal ID
      * @return proposal RebalanceProposal struct
      */
@@ -160,7 +159,7 @@ contract LiquidityVault is ReentrancyGuard, Ownable {
     }
     
     /**
-     * @dev Get total number of rebalance proposals
+     * @notice Get total number of rebalance proposals
      * @return count Number of proposals
      */
     function getProposalCount() external view returns (uint256) {
@@ -168,7 +167,7 @@ contract LiquidityVault is ReentrancyGuard, Ownable {
     }
     
     /**
-     * @dev Emergency function to pause the contract (inherited from Ownable)
+     * @notice Emergency function to pause the contract (inherited from Ownable)
      */
     function emergencyPause() external onlyOwner {
         // Implementation would depend on your specific needs
