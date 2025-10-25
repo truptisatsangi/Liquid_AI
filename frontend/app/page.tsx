@@ -23,7 +23,9 @@ import PoolTable from './components/PoolTableSimple'
 import RebalanceHistory from './components/RebalanceHistory'
 import MarketChart from './components/MarketChart'
 import AgentStatus from './components/AgentStatusSimple'
-import ChatInterface from './components/ChatInterfaceSimple'
+import ChatAgent from './components/ChatAgent'
+import LiveRebalancing from './components/LiveRebalancing'
+import PortfolioTracker from './components/PortfolioTracker'
 import SponsorBadges from './components/SponsorBadges'
 import DataFreshness from './components/DataFreshness'
 import DemoModeSwitch from './components/DemoModeSwitchSimple'
@@ -306,10 +308,20 @@ export default function Dashboard() {
           <RebalanceHistory />
         </div>
 
+        {/* Live Portfolio Rebalancing */}
+        <div className="mb-8">
+          <LiveRebalancing />
+        </div>
+
+        {/* Portfolio Tracker */}
+        <div className="mb-8">
+          <PortfolioTracker />
+        </div>
+
         {/* Demo Mode and Chat */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <DemoModeSwitch />
-          <ChatInterface />
+          <ChatAgent />
         </div>
       </main>
 

@@ -4,29 +4,35 @@
   "description": "AI-driven liquidity orchestration protocol for ETHOnline 2025",
   "main": "index.js",
   "scripts": {
-    "compile": "hardhat compile",
-    "test": "hardhat test",
-    "deploy": "hardhat run scripts/deploy.js",
     "dev": "cd frontend && npm run dev",
     "build": "cd frontend && npm run build",
-    "start": "cd frontend && npm start"
+    "start": "cd frontend && npm start",
+    "test": "npx hardhat test",
+    "compile": "npx hardhat compile",
+    "deploy": "npx hardhat run scripts/deploy.js",
+    "clean": "rm -rf node_modules cache artifacts frontend/node_modules frontend/.next"
   },
   "keywords": [
     "defi",
     "liquidity",
     "ai",
+    "portfolio",
+    "rebalancing",
     "ethereum",
-    "dex"
+    "pyth",
+    "envio"
   ],
   "author": "LiquidAI Team",
   "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "@openzeppelin/contracts": "^5.4.0",
     "hardhat": "^2.19.0"
   },
   "dependencies": {
-    "dotenv": "^16.3.1",
+    "@openzeppelin/contracts": "^5.0.0",
     "ethers": "^6.8.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
